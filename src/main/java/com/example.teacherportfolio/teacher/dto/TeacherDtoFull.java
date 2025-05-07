@@ -4,6 +4,7 @@ import com.example.teacherportfolio.category.model.Category;
 import com.example.teacherportfolio.education.model.Education;
 import com.example.teacherportfolio.refresherCourses.model.Course;
 import com.example.teacherportfolio.teacher.model.Subject;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,8 +19,10 @@ import java.util.UUID;
 public class TeacherDtoFull {
     private UUID id;
 
+    @NotBlank(message = "Поле Фамилия должно быть заполнено")
     private String firstName;
 
+    @NotBlank(message = "Поле Имя должно быть заполнено")
     private String name;
 
     private String surName;

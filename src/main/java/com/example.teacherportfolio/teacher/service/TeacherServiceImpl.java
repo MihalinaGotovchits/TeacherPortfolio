@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -43,8 +44,10 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public TeacherDtoFull update(UUID id, TeacherDtoFull teacherDtoFull) {
-        log.info("Обновление преподавателя {}{}{}",teacherDtoFull.getFirstName(), teacherDtoFull.getName(), teacherDtoFull.getSurName());
+        log.info("Обновление преподавателя {} {} {}",teacherDtoFull.getFirstName(), teacherDtoFull.getName(), teacherDtoFull.getSurName());
+
         Teacher teacher = checkTeacher(id);
+
         teacher.setId(teacherDtoFull.getId());
         teacher.setFirstName(teacherDtoFull.getFirstName());
         teacher.setName(teacherDtoFull.getName());
@@ -55,7 +58,40 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setEducation(teacherDtoFull.getEducation());
         teacher.setWorkExperience(teacherDtoFull.getWorkExperience());
         teacher.setCourses(teacherDtoFull.getRefresherCoursesList());
+
         return TeacherMapper.toTeacherDtoFull(teacher);
+    }
+
+    @Override
+    public TeacherDtoFull updateTeacherName(UUID teacherId, String name) {
+        Teacher teacher = checkTeacher(teacherId);
+        log.info("Обновление имени у преподавателя {} {} {}", teacher.getFirstName(), teacher.getName(), teacher.getSurName());
+        teacher.setName(name);
+        return TeacherMapper.toTeacherDtoFull(teacherRepository.save(teacher));
+    }
+
+    @Override
+    public TeacherDtoFull updateTeacherFirsName(UUID teacherId, String firstName) {
+        Teacher teacher = checkTeacher(teacherId);
+        log.info("Обновление фамилии у преподавателя {} {} {}", teacher.getFirstName(), teacher.getName(), teacher.getSurName());
+        teacher.setFirstName(firstName);
+        return TeacherMapper.toTeacherDtoFull(teacherRepository.save(teacher));
+    }
+
+    @Override
+    public TeacherDtoFull updateTeacherSurName(UUID teacherId, String surName) {
+        Teacher teacher = checkTeacher(teacherId);
+        log.info("Обновление отчества у преподавателя {} {} {}", teacher.getFirstName(), teacher.getName(), teacher.getSurName());
+        teacher.setSurName(surName);
+        return TeacherMapper.toTeacherDtoFull(teacherRepository.save(teacher));
+    }
+
+    @Override
+    public TeacherDtoFull updateTeacherBirthday(UUID teacherId, LocalDate dateOfBirth) {
+        Teacher teacher = checkTeacher(teacherId);
+        log.info("Обновление дня рождения у преподавателя {} {} {}", teacher.getFirstName(), teacher.getName(), teacher.getSurName());
+        teacher.setDateOfBirth(dateOfBirth);
+        return TeacherMapper.toTeacherDtoFull(teacherRepository.save(teacher));
     }
 
     @Override
