@@ -14,6 +14,7 @@ import java.util.UUID;
 @Table(name = "categories")
 @Getter
 @Setter
+@ToString
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor

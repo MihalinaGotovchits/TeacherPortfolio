@@ -112,6 +112,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         teacher.setCategory(defaultCategory);
         teacherRepository.save(teacher);
+        categoryRepository.save(defaultCategory);
     }
 
     private Teacher checkTeacher(UUID teacherId) {
