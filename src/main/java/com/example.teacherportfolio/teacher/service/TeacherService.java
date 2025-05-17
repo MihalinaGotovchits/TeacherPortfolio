@@ -11,6 +11,8 @@ public interface TeacherService {
 
     TeacherDtoFull getTeacherById(UUID id);
 
+    List<TeacherDtoFull> getTeachersByFirstNameContaining(String firstName);
+
     TeacherDtoFull saveTeacher(TeacherDtoFull teacherDtoFull);
 
     TeacherDtoFull update(UUID id, TeacherDtoFull teacherDtoFull);
@@ -22,6 +24,8 @@ public interface TeacherService {
     TeacherDtoFull updateTeacherSurName(UUID teacherId, String surName);
 
     TeacherDtoFull updateTeacherBirthday(UUID teacherId, LocalDate dateOfBirth);
+
+    TeacherDtoFull updateTeacherPartTimeStatus(UUID teacherId, Boolean isPartTime);
 
     void deleteTeacherById(UUID id);
 

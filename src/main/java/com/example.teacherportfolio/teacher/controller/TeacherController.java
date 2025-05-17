@@ -32,7 +32,11 @@ public class TeacherController {
         return teacherService.getTeacherById(id);
     }
 
-
+    @GetMapping("/search/firstName")
+    public List<TeacherDtoFull> getTeachersByFirstNameContaining(@RequestParam String firstName) {
+        log.info("Запрос преподавателей с фамилией " + firstName);
+        return teacherService.getTeachersByFirstNameContaining(firstName);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -67,7 +71,7 @@ public class TeacherController {
     @PatchMapping("/{id}/surname")
     public TeacherDtoFull updateTeacherSurName(@PathVariable UUID id,
                                                @RequestParam String surName) {
-        log.info("Обновление фамилии у преподавателя {}", id);
+        log.info("Обновление отчества у преподавателя {}", id);
         return teacherService.updateTeacherSurName(id, surName);
     }
 
@@ -77,6 +81,15 @@ public class TeacherController {
                                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate dateOfBirth) {
         log.info("Обновление даты рождения у преподавателя {}", id);
         return teacherService.updateTeacherBirthday(id, dateOfBirth);
+    }
+
+    @PatchMapping("/{id}/partTime")
+    public TeacherDtoFull updateTeacherPartTimeStatus(
+            @PathVariable UUID id,
+            @RequestParam Boolean isPartTime
+    ) {
+        log.info("Обновление статуса совместителя для преподавателя {}: {}", id, isPartTime);
+        return teacherService.updateTeacherPartTimeStatus(id, isPartTime);
     }
 
     @DeleteMapping("/{id}")

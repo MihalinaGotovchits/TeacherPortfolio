@@ -33,6 +33,18 @@ public class TeacherServiceImpl implements TeacherService {
         return TeacherMapper.toTeacherDtoFull(teacher);
     }
 
+    @Override
+    public List<TeacherDtoFull> getTeachersByFirstNameContaining(String firstName) {
+        log.info("Поиск преподавателя с фамилией {}",firstName);
+        List<Teacher> teacherList = teacherRepository.findByFirstNameContainingIgnoreCase(firstName);
+
+        if (teacherList.isEmpty()){
+            throw new NotFoundException("Преподаватель(и) с фамилией " + firstName + " не найден(ы)");
+        }
+        return teacherList.stream()
+                .map(TeacherMapper::toTeacherDtoFull)
+                .collect(Collectors.toList());
+    }
 
 
     @Override
@@ -91,6 +103,19 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher teacher = checkTeacher(teacherId);
         log.info("Обновление дня рождения у преподавателя {} {} {}", teacher.getFirstName(), teacher.getName(), teacher.getSurName());
         teacher.setDateOfBirth(dateOfBirth);
+        return TeacherMapper.toTeacherDtoFull(teacherRepository.save(teacher));
+    }
+
+    @Override
+    public TeacherDtoFull updateTeacherPartTimeStatus(UUID teacherId, Boolean isPartTime) {
+        Teacher teacher = checkTeacher(teacherId);
+        switch (isPartTime.toString()) {
+            case "true":
+            log.info("Преподаватель {} является совместителем", teacher);
+            case "false":
+            log.info("Преподаватель {} не является совместителем", teacher);
+        }
+        teacher.setIsPartTime(isPartTime);
         return TeacherMapper.toTeacherDtoFull(teacherRepository.save(teacher));
     }
 

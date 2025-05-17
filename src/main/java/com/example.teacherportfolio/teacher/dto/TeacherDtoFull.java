@@ -38,4 +38,6 @@ public class TeacherDtoFull {
     private Category category;
 
     private List<Course> refresherCoursesList;
+
+    private boolean isPartTime;
 }

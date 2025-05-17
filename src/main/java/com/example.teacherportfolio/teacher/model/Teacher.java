@@ -61,5 +61,6 @@ public class Teacher {
     )
     private List<Course> courses;
 
-    //педагогическая нагрузка
+    @Column(name = "is_part_time", nullable = false)
+    private Boolean isPartTime;
 }
