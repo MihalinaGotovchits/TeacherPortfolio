@@ -19,6 +19,7 @@ public class TeacherMapper {
                 .education(teacher.getEducation())
                 .category(teacher.getCategory())
                 .refresherCoursesList(teacher.getCourses())
+                .isPartTime(teacher.getIsPartTime())
                 .build();
     }
 
@@ -34,6 +35,7 @@ public class TeacherMapper {
                 .education(teacherDtoFull.getEducation())
                 .category(teacherDtoFull.getCategory())
                 .courses(teacherDtoFull.getRefresherCoursesList())
+                .isPartTime(teacherDtoFull.getIsPartTime())
                 .build();
     }
 

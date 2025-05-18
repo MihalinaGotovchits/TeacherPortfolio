@@ -103,7 +103,7 @@ public class EducationServiceImpl implements EducationService  {
         if (!education.getTeacher().getId().equals(teacherId)) {
             throw new NotExistForTeacherException("Образование не принадлежит указанному преподавателю");
         }
-        educationRepository.delete(education);
+        educationRepository.deleteById(education.getId());
     }
 
     private Teacher checkTeacher(UUID teacherId) {

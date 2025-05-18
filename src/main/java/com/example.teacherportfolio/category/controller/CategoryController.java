@@ -40,7 +40,7 @@ public class CategoryController {
         return categoryService.saveCategory(teacherId, categoryDto);
     }
 
-    @PutMapping("/teacher/{teacherId}")
+    @PatchMapping("/teacher/{teacherId}")
     public CategoryDto updateCategoryById(
             @PathVariable UUID teacherId,
             @RequestBody CategoryDto categoryDto) {
