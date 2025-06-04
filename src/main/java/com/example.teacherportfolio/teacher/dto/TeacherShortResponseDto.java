@@ -4,17 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.UUID;
-
 @Data
 @AllArgsConstructor
-@Builder(toBuilder = true)
-public class TeacherDtoShort {
-    private UUID id;
-
+@Builder
+public class TeacherShortResponseDto {
+    private String lastName;
     private String firstName;
-
-    private String name;
-
     private String surName;
 }
