@@ -1,44 +1,43 @@
 package com.example.teacherportfolio.education.mapper;
 
-import com.example.teacherportfolio.education.dto.EducationDto;
-import com.example.teacherportfolio.education.dto.EducationDtoShort;
+import com.example.teacherportfolio.education.dto.EducationRequestDto;
+import com.example.teacherportfolio.education.dto.EducationResponseDto;
 import com.example.teacherportfolio.education.model.Education;
+import com.example.teacherportfolio.teacher.model.Teacher;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class EducationMapper {
-    public static EducationDto toEducationDto(Education education) {
-        return EducationDto.builder()
+    public static Education toEntity(EducationRequestDto dto, Teacher teacher) {
+        return Education.builder()
+                .levelOfEducation(dto.getLevelOfEducation())
+                .nameOfEducationalInstitution(dto.getNameOfEducationalInstitution())
+                .speciality(dto.getSpeciality())
+                .qualification(dto.getQualification())
+                .endDate(dto.getEndDate())
+                .diplomaNumber(dto.getDiplomaNumber())
+                .teacher(teacher)
+                .build();
+    }
+
+    public static EducationResponseDto toDto(Education education) {
+        return EducationResponseDto.builder()
                 .id(education.getId())
                 .levelOfEducation(education.getLevelOfEducation())
+                .nameOfEducationalInstitution(education.getNameOfEducationalInstitution())
                 .speciality(education.getSpeciality())
                 .qualification(education.getQualification())
-                .nameOfEducationalInstitution(education.getNameOfEducationalInstitution())
                 .endDate(education.getEndDate())
                 .diplomaNumber(education.getDiplomaNumber())
-                .teacher(education.getTeacher())
+                .teacherId(education.getTeacher().getId())
+                .teacherFullName(getTeacherFullName(education.getTeacher()))
                 .build();
     }
 
-    public static EducationDtoShort toEducationShortDto(Education education) {
-        return EducationDtoShort.builder()
-                .id(education.getId())
-                .levelOfEducation(education.getLevelOfEducation())
-                .speciality(education.getSpeciality())
-                .qualification(education.getQualification())
-                .endDate(education.getEndDate()).build();
-    }
-
-    public static Education toEducation(EducationDto educationDto) {
-        return Education.builder()
-                .id(educationDto.getId())
-                .levelOfEducation(educationDto.getLevelOfEducation())
-                .speciality(educationDto.getSpeciality())
-                .qualification(educationDto.getQualification())
-                .nameOfEducationalInstitution(educationDto.getNameOfEducationalInstitution())
-                .endDate(educationDto.getEndDate())
-                .diplomaNumber(educationDto.getDiplomaNumber())
-                .teacher(educationDto.getTeacher())
-                .build();
+    private static String getTeacherFullName(Teacher teacher) {
+        return String.format("%s %s %s",
+                teacher.getLastName(),
+                teacher.getFirstName(),
+                teacher.getSurName()).trim();
     }
 }

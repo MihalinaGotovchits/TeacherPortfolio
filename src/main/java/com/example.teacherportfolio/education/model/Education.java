@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Table(name = "educations")
@@ -18,9 +17,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Education {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "education_id")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "level_of_education", nullable = false)

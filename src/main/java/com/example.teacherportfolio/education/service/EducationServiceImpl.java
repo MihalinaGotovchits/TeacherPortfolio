@@ -1,6 +1,7 @@
 package com.example.teacherportfolio.education.service;
 
-import com.example.teacherportfolio.education.dto.EducationDto;
+import com.example.teacherportfolio.education.dto.EducationRequestDto;
+import com.example.teacherportfolio.education.dto.EducationResponseDto;
 import com.example.teacherportfolio.education.mapper.EducationMapper;
 import com.example.teacherportfolio.education.model.Education;
 import com.example.teacherportfolio.education.model.LevelOfEducation;
@@ -15,106 +16,116 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
-public class EducationServiceImpl implements EducationService  {
+public class EducationServiceImpl implements EducationService {
     private final EducationRepository educationRepository;
     private final TeacherRepository teacherRepository;
 
     @Override
-    public List<EducationDto> getAllEducations() {
-        log.info("Извлекаем все образования всех преподавателей");
+    @Transactional(readOnly = true)
+    public List<EducationResponseDto> getAllEducations() {
+        log.info("Получение списка всех образований");
         return educationRepository.findAll().stream()
-                .map(EducationMapper::toEducationDto).toList();
-    }
-
-    @Override
-    public List<EducationDto> getEducationsByTeacherIdAndLevel(UUID teacherId, LevelOfEducation educationLevel) {
-        Teacher teacher = checkTeacher(teacherId);
-
-        log.info("Получаем информацию о {} образовании преподавателя {}{}{}", educationLevel, teacher.getFirstName(),
-                teacher.getName(), teacher.getSurName());
-
-        List<Education> educations = educationRepository
-                .findByTeacherIdAndLevelOfEducation(teacherId, educationLevel);
-
-        if (educations.isEmpty()) {
-            throw new NotFoundException(
-                    String.format("Образования уровня %s для преподавателя с ID %s не найдены",
-                            educationLevel, teacherId));
-        }
-
-        return educations.stream()
-                .map(EducationMapper::toEducationDto)
+                .map(EducationMapper::toDto)
                 .toList();
     }
 
     @Override
-    public List<EducationDto> getEducationsByTeacherId(UUID teacherId) {
-        Teacher teacher = checkTeacher(teacherId);
-        log.info("Получаем информацию об образовании преподавателя {}{}{}", teacher.getFirstName(),
-                teacher.getName(), teacher.getSurName());
+    @Transactional(readOnly = true)
+    public List<EducationResponseDto> getEducationsByTeacherId(Long teacherId) {
+        log.info("Получение образований преподавателя с ID: {}", teacherId);
+        checkTeacher(teacherId);
 
         return educationRepository.findByTeacherId(teacherId).stream()
-                .map(EducationMapper::toEducationDto).toList();
+                .map(EducationMapper::toDto)
+                .toList();
     }
 
     @Override
-    public EducationDto saveEducationByTeacherId(UUID teacherId, EducationDto educationDto) {
-        Teacher teacher = checkTeacher(teacherId);
-        log.info("Сохраняем информацию об образовании преподавателя {}{}{}", teacher.getFirstName(), teacher.getName(),
-                teacher.getSurName());
-        Education education = EducationMapper.toEducation(educationDto);
-        education.setTeacher(teacher);
-        Education savedEducation = educationRepository.save(education);
-        return EducationMapper.toEducationDto(savedEducation);
-    }
+    @Transactional(readOnly = true)
+    public List<EducationResponseDto> getEducationsByTeacherIdAndLevel(Long teacherId, LevelOfEducation level) {
+        log.info("Получение образований уровня {} преподавателя с ID: {}", level, teacherId);
+        checkTeacher(teacherId);
 
-    @Override
-    public EducationDto updateTeacherEducation(UUID teacherId, EducationDto educationDto) {
-        Teacher teacher = checkTeacher(teacherId);
-        log.info("Обновляем информацию об образовании преподавателя {}{}{}", teacher.getFirstName(), teacher.getName(),
-                teacher.getSurName());
-        Education existingEducation = checkEducation(educationDto.getId());
-        if (!existingEducation.getTeacher().getId().equals(teacherId)) {
-            throw new NotExistForTeacherException("Образование не принадлежит указанному преподавателю");
+        List<Education> educations = educationRepository.findByTeacherIdAndLevelOfEducation(teacherId, level);
+        if (educations.isEmpty()) {
+            throw new NotFoundException(
+                    String.format("Образования уровня %s для преподавателя с ID %s не найдены", level, teacherId));
         }
 
-        existingEducation.setLevelOfEducation(educationDto.getLevelOfEducation());
-        existingEducation.setNameOfEducationalInstitution(educationDto.getNameOfEducationalInstitution());
-        existingEducation.setSpeciality(educationDto.getSpeciality());
-        existingEducation.setQualification(educationDto.getQualification());
-        existingEducation.setEndDate(educationDto.getEndDate());
-        existingEducation.setDiplomaNumber(educationDto.getDiplomaNumber());
-
-        Education updateEducation = educationRepository.save(existingEducation);
-        return EducationMapper.toEducationDto(updateEducation);
+        return educations.stream()
+                .map(EducationMapper::toDto)
+                .toList();
     }
 
     @Override
-    public void deleteEducationByTeacherId(UUID teacherId, UUID educationId) {
-        Teacher teacher = checkTeacher(teacherId);
-        log.info("Удаляем образование у преподавателя {}{}{}", teacher.getFirstName(), teacher.getName(), teacher.getSurName());
+    public EducationResponseDto getEducationById(Long educationId) {
         Education education = checkEducation(educationId);
+        return EducationMapper.toDto(education);
+    }
+
+    @Override
+    @Transactional
+    public EducationResponseDto createEducation(Long teacherId, EducationRequestDto requestDto) {
+        log.info("Создание образования для преподавателя с ID: {}", teacherId);
+        Teacher teacher = checkTeacher(teacherId);
+
+        Education education = EducationMapper.toEntity(requestDto, teacher);
+        Education savedEducation = educationRepository.save(education);
+
+        return EducationMapper.toDto(savedEducation);
+    }
+
+    @Override
+    @Transactional
+    public EducationResponseDto updateEducation(Long teacherId, Long educationId, EducationRequestDto requestDto) {
+        log.info("Обновление образования для преподавателя с ID: {}", teacherId);
+        Teacher existingTeacher = checkTeacher(teacherId);
+
+        List<Education> educations = existingTeacher.getEducations();
+        Education existingEducation = checkEducation(educationId);
+
+        existingEducation.setLevelOfEducation(requestDto.getLevelOfEducation());
+        existingEducation.setNameOfEducationalInstitution(requestDto.getNameOfEducationalInstitution());
+        existingEducation.setSpeciality(requestDto.getSpeciality());
+        existingEducation.setQualification(requestDto.getQualification());
+        existingEducation.setEndDate(requestDto.getEndDate());
+        existingEducation.setDiplomaNumber(requestDto.getDiplomaNumber());
+
+        Education updatedEducation = educationRepository.save(existingEducation);
+
+        existingTeacher.getEducations().removeIf(edu -> edu.getId().equals(educationId));
+        educations.add(updatedEducation);
+
+        return EducationMapper.toDto(updatedEducation);
+    }
+
+    @Override
+    @Transactional
+    public void deleteTeacherEducation(Long teacherId, Long educationId) {
+        log.info("Удаление образования с ID {} у преподавателя с ID {}", educationId, teacherId);
+        Teacher teacher = checkTeacher(teacherId);
+        Education education = checkEducation(educationId);
+
         if (!education.getTeacher().getId().equals(teacherId)) {
             throw new NotExistForTeacherException("Образование не принадлежит указанному преподавателю");
         }
-        educationRepository.deleteById(education.getId());
+
+        teacher.getEducations().remove(education);
+        educationRepository.delete(education);
     }
 
-    private Teacher checkTeacher(UUID teacherId) {
-        return teacherRepository.findById(teacherId).orElseThrow(
-                () -> new NotFoundException("Преподаватель с Id " + teacherId +" не найден")
-        );
+    private Teacher checkTeacher(Long teacherId) {
+        return teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new NotFoundException("Преподаватель с ID " + teacherId + " не найден"));
     }
 
-    private Education checkEducation(UUID educationId) {
-        return educationRepository.findById(educationId).orElseThrow(
-                () -> new NotFoundException("Образование не найдено")
-        );
+    private Education checkEducation(Long educationId) {
+        return educationRepository.findById(educationId)
+                .orElseThrow(() -> new NotFoundException("Образование с ID " + educationId + " не найдено"));
     }
+
 }
