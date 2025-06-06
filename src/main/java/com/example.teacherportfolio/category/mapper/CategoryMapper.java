@@ -1,38 +1,46 @@
 package com.example.teacherportfolio.category.mapper;
 
-import com.example.teacherportfolio.category.dto.CategoryDto;
-import com.example.teacherportfolio.category.dto.CategoryShortDto;
+import com.example.teacherportfolio.category.dto.CategoryRequestDto;
+import com.example.teacherportfolio.category.dto.CategoryResponseDto;
 import com.example.teacherportfolio.category.model.Category;
+import com.example.teacherportfolio.teacher.model.Teacher;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class CategoryMapper {
-    public static CategoryDto toCategoryDto(Category category) {
-        return CategoryDto.builder()
-                .id(category.getId())
-                .categoryLevel(category.getCategoryLevel())
-                .documentOnAssignmentOfCategory(category.getDocumentOnAssignmentOfCategory())
-                .dateDocumentOnAssignmentOfCategory(category.getDateDocumentOnAssignmentOfCategory())
-                .numberDocumentOnAssignmentOfCategory(category.getNumberDocumentOnAssignmentOfCategory())
-                .teachers(category.getTeachers())
-                .build();
-    }
-
-    public static CategoryShortDto toCategoryShortDto(Category category) {
-        return CategoryShortDto.builder()
-                .id(category.getId())
-                .categoryLevel(category.getCategoryLevel())
-                .build();
-    }
-
-    public static Category toCategory(CategoryDto categoryDto) {
+    public static Category toEntity(CategoryRequestDto dto, Teacher teacher) {
         return Category.builder()
-                .id(categoryDto.getId())
-                .categoryLevel(categoryDto.getCategoryLevel())
-                .documentOnAssignmentOfCategory(categoryDto.getDocumentOnAssignmentOfCategory())
-                .numberDocumentOnAssignmentOfCategory(categoryDto.getNumberDocumentOnAssignmentOfCategory())
-                .dateDocumentOnAssignmentOfCategory(categoryDto.getDateDocumentOnAssignmentOfCategory())
-                .teachers(categoryDto.getTeachers())
+                .categoryLevel(dto.getCategoryLevel())
+                .documentOnAssignmentOfCategory(dto.getDocumentName())
+                .numberDocumentOnAssignmentOfCategory(dto.getDocumentNumber())
+                .dateDocumentOnAssignmentOfCategory(dto.getDocumentDate())
+                .teacher(teacher)
                 .build();
+    }
+
+    public static CategoryResponseDto toDto(Category category) {
+        return CategoryResponseDto.builder()
+                .id(category.getId())
+                .categoryLevel(category.getCategoryLevel())
+                .documentName(category.getDocumentOnAssignmentOfCategory())
+                .documentNumber(category.getNumberDocumentOnAssignmentOfCategory())
+                .documentDate(category.getDateDocumentOnAssignmentOfCategory())
+                .teacherId(category.getTeacher().getId())
+                .teacherFullName(getTeacherFullName(category.getTeacher()))
+                .build();
+    }
+
+//    public static CategoryShortResponseDto toShortDto(Category category) {
+//        return CategoryShortResponseDto.builder()
+//                .id(category.getId())
+//                .categoryLevel(category.getCategoryLevel())
+//                .build();
+//    }
+
+    private static String getTeacherFullName(Teacher teacher) {
+        return String.format("%s %s %s",
+                teacher.getLastName(),
+                teacher.getFirstName(),
+                teacher.getSurName()).trim();
     }
 }
