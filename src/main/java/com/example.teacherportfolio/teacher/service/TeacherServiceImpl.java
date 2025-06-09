@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,51 +71,6 @@ public class TeacherServiceImpl implements TeacherService {
         existingTeacher.setIsPartTime(teacherRequestDto.getIsPartTime());
 
         Teacher updatedTeacher = teacherRepository.save(existingTeacher);
-        return TeacherMapper.toShortDto(updatedTeacher);
-    }
-
-    @Override
-    public TeacherShortResponseDto updateTeacherName(Long teacherId, String name) {
-        Teacher teacher = checkTeacher(teacherId);
-        log.info("Обновление имени у преподавателя с id {}", teacherId);
-        teacher.setFirstName(name);
-        Teacher updatedTeacher = teacherRepository.save(teacher);
-        return TeacherMapper.toShortDto(updatedTeacher);
-    }
-
-    @Override
-    public TeacherShortResponseDto updateTeacherFirsName(Long teacherId, String firstName) {
-        Teacher teacher = checkTeacher(teacherId);
-        log.info("Обновление фамилии у преподавателя с id {}", teacherId);
-        teacher.setLastName(firstName);
-        Teacher updatedTeacher = teacherRepository.save(teacher);
-        return TeacherMapper.toShortDto(updatedTeacher);
-    }
-
-    @Override
-    public TeacherShortResponseDto updateTeacherSurName(Long teacherId, String surName) {
-        Teacher teacher = checkTeacher(teacherId);
-        log.info("Обновление отчества у преподавателя с id {}", teacherId);
-        teacher.setSurName(surName);
-        Teacher updatedTeacher = teacherRepository.save(teacher);
-        return TeacherMapper.toShortDto(updatedTeacher);
-    }
-
-    @Override
-    public TeacherShortResponseDto updateTeacherBirthday(Long teacherId, LocalDate dateOfBirth) {
-        Teacher teacher = checkTeacher(teacherId);
-        log.info("Обновление дня рождения у преподавателя с id {}", teacherId);
-        teacher.setBirthDate(dateOfBirth);
-        Teacher updatedTeacher = teacherRepository.save(teacher);
-        return TeacherMapper.toShortDto(updatedTeacher);
-    }
-
-    @Override
-    public TeacherShortResponseDto updateTeacherPartTimeStatus(Long teacherId, Boolean isPartTime) {
-        Teacher teacher = checkTeacher(teacherId);
-        log.info("Обновление статуса совместителя у преподавателя с id {} на {}", teacherId, isPartTime);
-        teacher.setIsPartTime(isPartTime);
-        Teacher updatedTeacher = teacherRepository.save(teacher);
         return TeacherMapper.toShortDto(updatedTeacher);
     }
 
