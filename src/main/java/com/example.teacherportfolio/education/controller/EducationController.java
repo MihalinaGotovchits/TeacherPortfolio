@@ -53,7 +53,7 @@ public class EducationController {
         return educationService.createEducation(teacherId, educationDto);
     }
 
-    @PutMapping("{educationId}/teacher/{teacherId}")
+    @PatchMapping("{educationId}/teacher/{teacherId}")
     public EducationResponseDto updateTeacherEducation(
             @PathVariable Long teacherId,
             @PathVariable Long educationId,
