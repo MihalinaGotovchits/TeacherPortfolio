@@ -1,28 +1,24 @@
 package com.example.teacherportfolio.refresherCourses.service;
 
 
-import com.example.teacherportfolio.refresherCourses.dto.CoursesDto;
-import com.example.teacherportfolio.teacher.dto.TeacherDtoFull;
+import com.example.teacherportfolio.refresherCourses.dto.CoursesRequestDto;
+import com.example.teacherportfolio.refresherCourses.dto.CoursesResponseDto;
+import com.example.teacherportfolio.refresherCourses.model.Course;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface CoursesService {
-    List<CoursesDto> getAllCourses();
+    List<CoursesResponseDto> getAllCourses();
 
-    CoursesDto getCourseById(UUID courseId);
+    CoursesResponseDto getCourseById(Long courseId);
 
-    List<CoursesDto> getCoursesByTeacherId(UUID teacherId);
+    List<CoursesResponseDto> getCoursesByTeacherId(Long teacherId);
 
-    List<TeacherDtoFull> getTeachersByCourseId(UUID courseId);
+    CoursesResponseDto saveCourseByTeacherId(Long teacherId, CoursesRequestDto refreshCoursesDto);
 
-    CoursesDto saveCourseByTeacherId(UUID teacherId, CoursesDto refreshCoursesDto);
+    CoursesResponseDto updateCoursesByTeacherId(Long teacherId, Course course);
 
-    CoursesDto updateTeacherCourseByName(UUID teacherId, String nameOfCourse, CoursesDto updateDto);
+    void deleteCourseByTeacherId(Long teacherId, Long CourseId);
 
-    CoursesDto updateCoursesByTeacherId(UUID teacherId, CoursesDto refreshCoursesDto);
-
-    void deleteCourseByTeacherId(UUID teacherId, UUID CourseId);
-
-    void deleteAllCoursesByTeacherId(UUID teacherId);
+    void deleteAllCoursesByTeacherId(Long teacherId);
 }
