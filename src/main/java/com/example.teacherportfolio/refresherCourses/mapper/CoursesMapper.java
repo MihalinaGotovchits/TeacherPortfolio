@@ -11,7 +11,7 @@ public class CoursesMapper {
     public static Course toEntity(CoursesRequestDto dto, Teacher teacher) {
         return Course.builder()
                 .courseName(dto.getCourseName())
-                .countOfHours(dto.getHours())
+                .countOfHours(dto.getCountOfHours())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
                 .organization(dto.getOrganization())
@@ -25,7 +25,7 @@ public class CoursesMapper {
         return CoursesResponseDto.builder()
                 .id(course.getId())
                 .courseName(course.getCourseName())
-                .hours(course.getCountOfHours())
+                .countOfHours(course.getCountOfHours())
                 .startDate(course.getStartDate())
                 .endDate(course.getEndDate())
                 .organization(course.getOrganization())

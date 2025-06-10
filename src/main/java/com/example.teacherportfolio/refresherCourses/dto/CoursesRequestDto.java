@@ -15,7 +15,7 @@ public class CoursesRequestDto {
     private String courseName;
 
     @Positive
-    private int hours;
+    private int countOfHours;
 
     @NotNull
     @FutureOrPresent

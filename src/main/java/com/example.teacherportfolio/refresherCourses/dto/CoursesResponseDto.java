@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class CoursesResponseDto {
     private Long id;
     private String courseName;
-    private int hours;
+    private int countOfHours;
     private LocalDate startDate;
     private LocalDate endDate;
     private String organization;
