@@ -1,33 +1,22 @@
 package com.example.teacherportfolio.teacher.service;
 
-import com.example.teacherportfolio.teacher.dto.TeacherDtoFull;
+import com.example.teacherportfolio.teacher.dto.TeacherRequestDto;
+import com.example.teacherportfolio.teacher.dto.TeacherShortResponseDto;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 public interface TeacherService {
-    List<TeacherDtoFull> getAllTeachers();
+    List<TeacherShortResponseDto> getAllTeachers();
 
-    TeacherDtoFull getTeacherById(UUID id);
+    TeacherShortResponseDto getTeacherById(Long id);
 
-    List<TeacherDtoFull> getTeachersByFirstNameContaining(String firstName);
+    List<TeacherShortResponseDto> getTeachersByFirstNameContaining(String firstName);
 
-    TeacherDtoFull saveTeacher(TeacherDtoFull teacherDtoFull);
+    TeacherShortResponseDto saveTeacher(TeacherRequestDto teacherDtoFull);
 
-    TeacherDtoFull update(UUID id, TeacherDtoFull teacherDtoFull);
+    TeacherShortResponseDto update(Long id, TeacherRequestDto teacherDtoFull);
 
-    TeacherDtoFull updateTeacherName(UUID teacherId, String name);
-
-    TeacherDtoFull updateTeacherFirsName(UUID teacherId, String firstName);
-
-    TeacherDtoFull updateTeacherSurName(UUID teacherId, String surName);
-
-    TeacherDtoFull updateTeacherBirthday(UUID teacherId, LocalDate dateOfBirth);
-
-    TeacherDtoFull updateTeacherPartTimeStatus(UUID teacherId, Boolean isPartTime);
-
-    void deleteTeacherById(UUID id);
+    void deleteTeacherById(Long id);
 
     void deleteAllTeachers();
 }

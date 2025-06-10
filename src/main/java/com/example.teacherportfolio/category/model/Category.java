@@ -7,8 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "categories")
@@ -20,9 +18,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "category_id")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "category_level", nullable = false)
@@ -40,6 +37,7 @@ public class Category {
     @Column(name = "date_document_on_assignment", nullable = false)
     private LocalDate dateDocumentOnAssignmentOfCategory;
 
-    @OneToMany(mappedBy = "category")
-    private List<Teacher> teachers;
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 }

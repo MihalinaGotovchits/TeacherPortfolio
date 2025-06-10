@@ -1,49 +1,66 @@
 package com.example.teacherportfolio.teacher.mapper;
 
-import com.example.teacherportfolio.teacher.dto.TeacherDtoFull;
-import com.example.teacherportfolio.teacher.dto.TeacherDtoShort;
+import com.example.teacherportfolio.category.model.Category;
+import com.example.teacherportfolio.education.model.Education;
+import com.example.teacherportfolio.refresherCourses.model.Course;
+import com.example.teacherportfolio.teacher.dto.TeacherRequestDto;
+import com.example.teacherportfolio.teacher.dto.TeacherResponseDto;
+import com.example.teacherportfolio.teacher.dto.TeacherShortResponseDto;
 import com.example.teacherportfolio.teacher.model.Teacher;
 import lombok.experimental.UtilityClass;
 
+import java.util.stream.Collectors;
+
 @UtilityClass
 public class TeacherMapper {
-    public static TeacherDtoFull toTeacherDtoFull(Teacher teacher) {
-        return TeacherDtoFull.builder()
-                .id(teacher.getId())
+
+    public static TeacherRequestDto toTeacherRequestDto(Teacher teacher) {
+        return TeacherRequestDto.builder()
+                .lastName(teacher.getLastName())
                 .firstName(teacher.getFirstName())
-                .name(teacher.getName())
                 .surName(teacher.getSurName())
-                .dateOfBirth(teacher.getDateOfBirth())
+                .birthDate(teacher.getBirthDate())
                 .subject(teacher.getSubject())
-                .workExperience(teacher.getWorkExperience())
-                .education(teacher.getEducation())
-                .category(teacher.getCategory())
-                .refresherCoursesList(teacher.getCourses())
                 .isPartTime(teacher.getIsPartTime())
                 .build();
     }
 
-    public static Teacher toTeacher(TeacherDtoFull teacherDtoFull) {
+    public static Teacher toTeacher(TeacherRequestDto teacherRequestDto) {
         return Teacher.builder()
-                .id(teacherDtoFull.getId())
-                .firstName(teacherDtoFull.getFirstName())
-                .name(teacherDtoFull.getName())
-                .surName(teacherDtoFull.getSurName())
-                .dateOfBirth(teacherDtoFull.getDateOfBirth())
-                .subject(teacherDtoFull.getSubject())
-                .workExperience(teacherDtoFull.getWorkExperience())
-                .education(teacherDtoFull.getEducation())
-                .category(teacherDtoFull.getCategory())
-                .courses(teacherDtoFull.getRefresherCoursesList())
-                .isPartTime(teacherDtoFull.getIsPartTime())
+                .lastName(teacherRequestDto.getLastName())
+                .firstName(teacherRequestDto.getFirstName())
+                .surName(teacherRequestDto.getSurName())
+                .birthDate(teacherRequestDto.getBirthDate())
+                .subject(teacherRequestDto.getSubject())
+                .isPartTime(teacherRequestDto.getIsPartTime())
                 .build();
     }
 
-    public static TeacherDtoShort toTeacherDtoShort(Teacher teacher) {
-        return TeacherDtoShort.builder()
+    public static TeacherResponseDto toTeacherResponseDto(Teacher teacher) {
+        return TeacherResponseDto.builder()
                 .id(teacher.getId())
+                .lastName(teacher.getLastName())
                 .firstName(teacher.getFirstName())
-                .name(teacher.getName())
+                .surName(teacher.getSurName())
+                .birthDate(teacher.getBirthDate())
+                .subject(teacher.getSubject())
+                .isPartTime(teacher.getIsPartTime())
+                .categoryLevels(teacher.getCategories().stream()
+                        .map(Category::getCategoryLevel)
+                        .collect(Collectors.toList()))
+                .educationLevels(teacher.getEducations().stream()
+                        .map(Education::getLevelOfEducation)
+                        .collect(Collectors.toList()))
+                .courseNames(teacher.getCourses().stream()
+                        .map(Course::getCourseName)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    public static TeacherShortResponseDto toShortDto(Teacher teacher) {
+        return TeacherShortResponseDto.builder()
+                .lastName(teacher.getLastName())
+                .firstName(teacher.getFirstName())
                 .surName(teacher.getSurName())
                 .build();
     }

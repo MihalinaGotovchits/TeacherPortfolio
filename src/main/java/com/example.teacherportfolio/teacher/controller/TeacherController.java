@@ -1,106 +1,74 @@
 package com.example.teacherportfolio.teacher.controller;
 
-import com.example.teacherportfolio.teacher.dto.TeacherDtoFull;
+import com.example.teacherportfolio.teacher.dto.TeacherRequestDto;
+import com.example.teacherportfolio.teacher.dto.TeacherShortResponseDto;
 import com.example.teacherportfolio.teacher.service.TeacherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/teachers")
+@RequestMapping("teachers")
+@CrossOrigin(origins = "http://localhost:63342")
 @Slf4j
 public class TeacherController {
     private final TeacherService teacherService;
 
     @GetMapping
-    public List<TeacherDtoFull> getAllTeachers() {
-        log.info("Получение списка препподавателей");
+    @Transactional
+    public List<TeacherShortResponseDto> getAllTeachers() {
+        log.info("Получение списка преподавателей");
         return teacherService.getAllTeachers();
     }
 
     @GetMapping("/{id}")
-    public TeacherDtoFull getTeacherById(@PathVariable UUID id) {
+    @Transactional
+    public TeacherShortResponseDto getTeacherById(@PathVariable Long id) {
         log.info("Поиск преподавателя с Id {}", id);
         return teacherService.getTeacherById(id);
     }
 
     @GetMapping("/search/firstName")
-    public List<TeacherDtoFull> getTeachersByFirstNameContaining(@RequestParam String firstName) {
+    @Transactional
+    public List<TeacherShortResponseDto> getTeachersByFirstNameContaining(@RequestParam String firstName) {
         log.info("Запрос преподавателей с фамилией " + firstName);
         return teacherService.getTeachersByFirstNameContaining(firstName);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TeacherDtoFull saveTeacher(@Valid @RequestBody TeacherDtoFull teacherDtoFull) {
+    @Transactional
+    public TeacherShortResponseDto saveTeacher(@Valid @RequestBody TeacherRequestDto teacherDtoFull) {
         log.info("Сохранение нового преподавателя {}", teacherDtoFull);
         return teacherService.saveTeacher(teacherDtoFull);
     }
 
     @PatchMapping("/{id}")
-    public TeacherDtoFull update(
-            @PathVariable UUID id,
-            @Valid @RequestBody TeacherDtoFull teacherDtoFull) {
-        log.info("Обновление преподавателя {}{}{}",teacherDtoFull.getFirstName(), teacherDtoFull.getName(), teacherDtoFull.getSurName());
+    @Transactional
+    public TeacherShortResponseDto update(
+            @PathVariable Long id,
+            @Valid @RequestBody TeacherRequestDto teacherDtoFull) {
+        log.info("Обновление преподавателя {} {} {}",teacherDtoFull.getLastName(), teacherDtoFull.getFirstName(), teacherDtoFull.getSurName());
         return teacherService.update(id, teacherDtoFull);
-    }
-
-    @PatchMapping("/{id}/name")
-    public TeacherDtoFull updateTeacherName(@PathVariable UUID id,
-                                            @RequestParam String name) {
-        log.info("Обновление имени у преподавателя {}", id);
-        return teacherService.updateTeacherName(id, name);
-    }
-
-    @PatchMapping("/{id}/firstname")
-    public TeacherDtoFull updateTeacherFirstName(@PathVariable UUID id,
-                                                 @RequestParam String firstName) {
-        log.info("Обновление фамилии у преподавателя {}", id);
-        return teacherService.updateTeacherFirsName(id, firstName);
-    }
-
-
-    @PatchMapping("/{id}/surname")
-    public TeacherDtoFull updateTeacherSurName(@PathVariable UUID id,
-                                               @RequestParam String surName) {
-        log.info("Обновление отчества у преподавателя {}", id);
-        return teacherService.updateTeacherSurName(id, surName);
-    }
-
-
-    @PatchMapping("/{id}/birthday")
-    public TeacherDtoFull updateTeacherDateOfBirth(@PathVariable UUID id,
-                                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate dateOfBirth) {
-        log.info("Обновление даты рождения у преподавателя {}", id);
-        return teacherService.updateTeacherBirthday(id, dateOfBirth);
-    }
-
-    @PatchMapping("/{id}/partTime")
-    public TeacherDtoFull updateTeacherPartTimeStatus(
-            @PathVariable UUID id,
-            @RequestParam Boolean isPartTime
-    ) {
-        log.info("Обновление статуса совместителя для преподавателя {}: {}", id, isPartTime);
-        return teacherService.updateTeacherPartTimeStatus(id, isPartTime);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTeacherById(@PathVariable UUID id) {
+    @Transactional
+    public void deleteTeacherById(@PathVariable Long id) {
         log.info("Удаление преподавателя с Id {}", id);
         teacherService.deleteTeacherById(id);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void deleteAllTeachers() {
         log.info("Удаление всех преподавателей");
         teacherService.deleteAllTeachers();

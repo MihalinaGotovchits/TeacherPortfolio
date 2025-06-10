@@ -8,17 +8,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface TeacherRepository extends JpaRepository<Teacher, UUID> {
-    List<Teacher> findByCategory_CategoryLevel(String categoryLevel);
-
-    // Найти все курсы преподавателя (через связь ManyToMany)
-
+public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     List<Teacher> findByFirstNameContainingIgnoreCase(String firstName);
 
-    @Query("SELECT c FROM Course c JOIN c.teachers t WHERE t.id = :teacherId")
-    List<Course> findCoursesByTeacherId(@Param("teacherId") UUID teacherId);
+    @Query("SELECT c FROM Course c JOIN c.teacher t WHERE t.id = :teacherId")
+    List<Course> findCoursesByTeacherId(@Param("teacherId") Long teacherId);
 }
