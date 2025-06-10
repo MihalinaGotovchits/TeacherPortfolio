@@ -22,7 +22,8 @@ TeacherPortfolio - это веб-приложение для отдела кад
    ```bash
    git clone https://github.com/MihalinaGotovchits/TeacherPortfolio.git
 2. Запустить контейнер базы данных и приложение в Docker командой
-   ```bash docker compose up -d
+   ```bash 
+   docker compose up -d
 
 ## Предстоящие дополнения
 
