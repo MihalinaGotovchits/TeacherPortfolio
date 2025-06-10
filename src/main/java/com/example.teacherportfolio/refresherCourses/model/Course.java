@@ -19,38 +19,39 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Course {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "course_id", updatable = false, nullable = false)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
 
     @NotBlank
-    @Column(name = "name_of_course", nullable = false)
-    private String nameOfCourse;
+    @Column(name = "course_name", nullable = false)
+    private String courseName;
 
     @NotNull
     @Column(name = "count_of_hours", nullable = false)
     private int countOfHours;
 
     @NotNull
-    @Column(name = "start_of_training", nullable = false)
-    private LocalDate startOfTraining;
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
 
     @NotNull
-    @Column(name = "end_of_training", nullable = false)
-    private LocalDate endOfTraining;
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
 
     @NotBlank
-    @Column(name = "name_of_educational_institution", nullable = false)
-    private String nameOfEducationalInstitution;
+    @Column(name = "organization", nullable = false)
+    private String organization;
 
     @NotBlank
-    @Column(name = "number_of_certificate", nullable = false)
-    private String numberOfCertificate;
+    @Column(name = "certificate_number", nullable = false)
+    private String certificateNumber;
 
     @NotNull
-    @Column(name = "date_of_certificate", nullable = false)
-    private LocalDate dateOfCertificate;
+    @Column(name = "certificate_date", nullable = false)
+    private LocalDate certificateDate;
 
-    @ManyToMany(mappedBy = "courses")
-    private Set<Teacher> teachers;
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 }
